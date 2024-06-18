@@ -1,4 +1,4 @@
-package com.example.demo.category;
+package com.example.demo.repository;
 
 public class CategoryRepository {
 }

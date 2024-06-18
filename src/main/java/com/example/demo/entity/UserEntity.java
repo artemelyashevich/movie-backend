@@ -1,4 +1,4 @@
-package com.example.demo.user;
+package com.example.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
