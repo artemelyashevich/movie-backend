@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.CategoryDto;
 import com.example.demo.entity.CategoryEntity;
 import com.example.demo.service.CategoryService;
+import com.example.demo.util.Utils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("category")
+@RequestMapping("categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -41,13 +42,7 @@ public class CategoryController {
     public ResponseEntity<?> create(@Valid @RequestBody CategoryDto dto,
                                     BindingResult bindingResult,
                                     UriComponentsBuilder uriComponentsBuilder) throws BindException {
-        if (bindingResult.hasErrors()) {
-            if (bindingResult instanceof BindException exception) {
-                throw exception;
-            } else {
-                throw new BindException(bindingResult);
-            }
-        }
+        Utils.validateBindingResult(bindingResult);
         final CategoryEntity category = this.categoryService.create(dto);
         return ResponseEntity
                 .created(
@@ -67,13 +62,7 @@ public class CategoryController {
     public ResponseEntity<Void> update(@PathVariable String categoryId,
                                     @Valid @RequestBody CategoryDto dto,
                                     BindingResult bindingResult) throws BindException {
-        if (bindingResult.hasErrors()) {
-            if (bindingResult instanceof BindException exception) {
-                throw exception;
-            } else {
-                throw new BindException(bindingResult);
-            }
-        }
+        Utils.validateBindingResult(bindingResult);
         this.categoryService.update(categoryId, dto);
         return ResponseEntity.noContent().build();
     }

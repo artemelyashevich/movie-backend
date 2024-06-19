@@ -17,7 +17,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 
@@ -31,7 +30,7 @@ public class MovieEntity {
     @Id
     private String id;
 
-    @Indexed
+    @Indexed(unique = true)
     private String title;
 
     @TextIndexed
@@ -49,19 +48,21 @@ public class MovieEntity {
 
     private Status status;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Date releaseYear;
+    private Integer releaseYear;
 
-    private String language;
+    @TextIndexed
+    private List<String> languages;
 
     @TextIndexed
     private String subtitle;
 
-    private Size size;
+    @TextIndexed
+    private String bannerImgUrl;
 
     @TextIndexed
-    private String categoryTitle;
+    private String imgUrl;
+
+    private Size size;
 
     @DBRef
     private List<GenreEntity> genres;

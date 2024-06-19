@@ -26,7 +26,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ProblemDetail> handleBindException(BindException bindException) {
         ProblemDetail problemDetail = ProblemDetail
-                .forStatusAndDetail(HttpStatus.BAD_REQUEST, "403");
+                .forStatusAndDetail(HttpStatus.BAD_REQUEST, "400");
         problemDetail.setProperty("errors",
                 bindException.getAllErrors().stream().map(ObjectError::getDefaultMessage).toList());
         return ResponseEntity

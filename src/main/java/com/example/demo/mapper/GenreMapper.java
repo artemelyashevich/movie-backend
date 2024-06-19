@@ -13,6 +13,7 @@ public class GenreMapper implements DtoMapper<GenreDto, GenreEntity> {
     public GenreEntity convertFromDto(GenreDto dto) {
         return GenreEntity.builder()
                 .title(dto.title())
+                .details(dto.details())
                 .build();
     }
 }

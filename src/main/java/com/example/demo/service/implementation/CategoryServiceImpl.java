@@ -26,6 +26,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Optional<CategoryEntity> findByName(String name) {
+        return Optional.ofNullable(
+                this.categoryRepository.findByTitle(name)
+                        .orElseThrow(NoSuchElementException::new)
+        );
+    }
+
+    @Override
     public List<CategoryEntity> findAll() {
         return this.categoryRepository.findAll();
     }

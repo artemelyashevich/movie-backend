@@ -13,6 +13,7 @@ public class CategoryMapper implements DtoMapper<CategoryDto, CategoryEntity> {
     public CategoryEntity convertFromDto(CategoryDto dto) {
         return CategoryEntity.builder()
                 .title(dto.title())
+                .details(dto.details())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.MovieDto;
 import com.example.demo.entity.movie.MovieEntity;
 
 import java.util.List;
@@ -11,9 +12,9 @@ public interface MovieService {
 
     List<MovieEntity> findAll();
 
-    MovieEntity create();
+    MovieEntity create(MovieDto dto);
 
-    MovieEntity update(String id);
+    void update(String id, MovieDto dto);
 
     void delete(String id);
 }

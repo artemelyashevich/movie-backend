@@ -31,6 +31,13 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    public Optional<GenreEntity> findByName(String name) {
+        return Optional.ofNullable(
+                this.genreRepository.findByTitle(name).orElseThrow(NoSuchElementException::new)
+        );
+    }
+
+    @Override
     public GenreEntity create(GenreDto dto) {
         return this.genreRepository.save(this.genreMapper.convertFromDto(dto));
     }

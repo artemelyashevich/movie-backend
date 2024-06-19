@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface CategoryService {
     Optional<CategoryEntity> findById(String id);
 
+    Optional<CategoryEntity> findByName(String name);
+
     List<CategoryEntity> findAll();
 
     CategoryEntity create(CategoryDto dto);
