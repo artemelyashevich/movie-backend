@@ -18,6 +18,6 @@ public class CategoryEntity {
     @Id
     private String id;
 
-    @Indexed
+    @Indexed(unique = true)
     private String title;
 }

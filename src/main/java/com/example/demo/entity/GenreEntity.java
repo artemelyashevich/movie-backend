@@ -18,6 +18,6 @@ public class GenreEntity {
     @Id
     private String id;
 
-    @Indexed
+    @Indexed(unique = true)
     private String title;
 }
