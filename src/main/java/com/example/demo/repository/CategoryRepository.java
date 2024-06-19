@@ -1,4 +1,7 @@
 package com.example.demo.repository;
 
-public class CategoryRepository {
+import com.example.demo.entity.CategoryEntity;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface CategoryRepository extends MongoRepository<CategoryEntity, String> {
 }
