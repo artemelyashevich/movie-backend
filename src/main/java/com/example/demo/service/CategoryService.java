@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.category.CategoryCreateDto;
-import com.example.demo.dto.category.CategoryUpdateDto;
+import com.example.demo.dto.CategoryDto;
 import com.example.demo.entity.CategoryEntity;
 
 import java.util.List;
@@ -12,9 +11,9 @@ public interface CategoryService {
 
     List<CategoryEntity> findAll();
 
-    CategoryEntity create(CategoryCreateDto dto);
+    CategoryEntity create(CategoryDto dto);
 
-    void update(String id, CategoryUpdateDto dto);
+    void update(String id, CategoryDto dto);
 
     void delete(String id);
 }

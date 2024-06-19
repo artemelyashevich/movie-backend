@@ -1,8 +1,8 @@
 package com.example.demo.service.implementation;
 
-import com.example.demo.dto.category.CategoryCreateDto;
-import com.example.demo.dto.category.CategoryUpdateDto;
+import com.example.demo.dto.CategoryDto;
 import com.example.demo.entity.CategoryEntity;
+import com.example.demo.mapper.DtoMapper;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,7 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final DtoMapper<CategoryDto, CategoryEntity> dtoMapper;
 
     @Override
     public Optional<CategoryEntity> findById(String id) {
@@ -30,12 +31,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryEntity create(CategoryCreateDto dto) {
-        return this.categoryRepository.save(new CategoryEntity(null, dto.title()));
+    public CategoryEntity create(CategoryDto dto) {
+        return this.categoryRepository.save(this.dtoMapper.convertFromDto(dto));
     }
 
     @Override
-    public void update(String id, CategoryUpdateDto dto) {
+    public void update(String id, CategoryDto dto) {
         this.categoryRepository.findById(id).ifPresentOrElse(
                 category -> {
                     category.setTitle(dto.title());
