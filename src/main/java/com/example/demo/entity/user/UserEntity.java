@@ -29,6 +29,9 @@ public class UserEntity {
     @Indexed(unique = true)
     private String username;
 
+    @Indexed(unique = true)
+    private String email;
+
     private String password;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

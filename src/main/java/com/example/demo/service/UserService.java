@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.auth.SignUpDto;
 import com.example.demo.entity.user.UserEntity;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface UserService {
     List<UserEntity> findAll();
 
     Optional<UserEntity> findById(String id);
+
+    UserEntity create(SignUpDto dto);
 }
