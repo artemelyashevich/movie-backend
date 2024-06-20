@@ -11,8 +11,7 @@ import java.util.List;
 @UtilityClass
 public class TokenService {
 
-    @Value("jwt.secret:very-strong-secret")
-    private String secret;
+    private String secret = "984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf";
 
     public String getUsername(String token) {
         return getAllClaimsFromToken(token).getSubject();

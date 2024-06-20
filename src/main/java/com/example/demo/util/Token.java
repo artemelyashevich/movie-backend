@@ -16,11 +16,9 @@ import java.util.Map;
 @UtilityClass
 public class Token {
 
-    @Value("jwt.secret:very-strong-secret")
-    private String secret;
+    private final String secret = "984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf";
 
-    @Value("jwt.lifetime:86400000")
-    private long jwtLifeTime;
+    private final long jwtLifeTime = 86400000;
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -38,7 +36,7 @@ public class Token {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(issuedAt)
                 .setExpiration(new Date(issuedAt.getTime() + jwtLifeTime))
-                .signWith(SignatureAlgorithm.ES256, secret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 }

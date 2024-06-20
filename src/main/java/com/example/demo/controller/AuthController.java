@@ -55,7 +55,7 @@ public class AuthController {
                 );
     }
 
-    @PostMapping("sing-up")
+    @PostMapping("sign-up")
     public ResponseEntity<AuthResponseDto> signUp(
             @Valid @RequestBody SignUpDto dto,
             BindingResult bindingResult,
