@@ -1,16 +1,12 @@
 package com.example.demo.util;
 
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @UtilityClass
@@ -21,7 +17,6 @@ public class Token {
     private final long jwtLifeTime = 86400000;
 
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
         Date issuedAt = new Date();
         return Jwts.builder()
                 .setClaims(
