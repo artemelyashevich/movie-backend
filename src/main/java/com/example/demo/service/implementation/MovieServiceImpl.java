@@ -4,6 +4,7 @@ import com.example.demo.dto.MovieDto;
 import com.example.demo.entity.CategoryEntity;
 import com.example.demo.entity.GenreEntity;
 import com.example.demo.entity.movie.MovieEntity;
+import com.example.demo.entity.movie.Status;
 import com.example.demo.mapper.DtoMapper;
 import com.example.demo.repository.MovieRepository;
 import com.example.demo.service.CategoryService;
@@ -34,7 +35,24 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieEntity> findAll() {
+    public List<MovieEntity> findAll(String categoryName, String genreName, String statusName) {
+        if (!categoryName.isEmpty()) {
+            return this.movieRepository.findAllByCategory(
+                    this.categoryService.findByName(categoryName)
+                            .orElseThrow(NoSuchElementException::new)
+            );
+        }
+        if (!genreName.isEmpty()) {
+            return this.movieRepository.findAllByGenre(
+                    this.genreService.findByName(genreName)
+                            .orElseThrow(NoSuchElementException::new)
+            );
+        }
+        if (!statusName.isEmpty()) {
+            return this.movieRepository.findAllByStatus(
+                    Status.valueOf(statusName)
+            );
+        }
         return this.movieRepository.findAll();
     }
 

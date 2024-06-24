@@ -10,7 +10,7 @@ public interface MovieService {
 
     Optional<MovieEntity> findById(String id);
 
-    List<MovieEntity> findAll();
+    List<MovieEntity> findAll(String categoryName, String genreName, String statusName);
 
     MovieEntity create(MovieDto dto);
 
