@@ -49,4 +49,22 @@ public class UserServiceImpl implements UserService {
         );
         return this.userRepository.save(user);
     }
+
+    @Override
+    public void update(String userId, SignUpDto dto) {
+        final UserEntity user = this.findById(userId).orElseThrow(
+                NoSuchElementException::new
+        );
+        user.setEmail(dto.email());
+        user.setUsername(dto.username());
+        this.userRepository.save(user);
+    }
+
+    @Override
+    public void delete(String username, String password) {
+        final UserEntity user = this.findByUsername(username).orElseThrow(
+                NoSuchElementException::new
+        );
+        this.userRepository.delete(user);
+    }
 }

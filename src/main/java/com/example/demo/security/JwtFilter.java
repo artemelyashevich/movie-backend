@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import com.example.demo.entity.user.Role;
 import com.example.demo.util.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -41,13 +43,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 log.warn("error");
             }
         }
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     username,
                     null,
-                    TokenService.getRoles(jwt).stream().map(
-                            role -> new SimpleGrantedAuthority(role.name())
-                    ).toList()
+                    List.of(new SimpleGrantedAuthority(TokenService.getRoles(jwt).toString()))
             );
             SecurityContextHolder.getContext().setAuthentication(token);
         }

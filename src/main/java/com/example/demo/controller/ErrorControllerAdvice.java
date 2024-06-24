@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
+@CrossOrigin(origins = "*")
 public class ErrorControllerAdvice {
 
     @ExceptionHandler(NoSuchElementException.class)

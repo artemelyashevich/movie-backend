@@ -4,7 +4,6 @@ import com.example.demo.entity.user.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -17,8 +16,8 @@ public class TokenService {
         return getAllClaimsFromToken(token).getSubject();
     }
 
-    public List<Role> getRoles(String token) {
-        return getAllClaimsFromToken(token).get("roles", List.class);
+    public Object getRoles(String token) {
+        return getAllClaimsFromToken(token).get("roles", List.class).get(0);
     }
 
     private Claims getAllClaimsFromToken(String token) {

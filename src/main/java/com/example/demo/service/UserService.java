@@ -15,4 +15,8 @@ public interface UserService {
     Optional<UserEntity> findById(String id);
 
     UserEntity create(SignUpDto dto);
+
+    void update(String userId, SignUpDto dto);
+
+    void delete(String username, String password);
 }
