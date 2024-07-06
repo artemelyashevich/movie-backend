@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Objects;
+
 @Document(collection = "genres")
 @Data
 @AllArgsConstructor
@@ -24,4 +26,17 @@ public class GenreEntity {
 
     @Indexed(unique = true)
     private String title;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GenreEntity that = (GenreEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(details, that.details) && Objects.equals(title, that.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, details, title);
+    }
 }

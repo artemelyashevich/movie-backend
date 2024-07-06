@@ -18,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 
 @Document(collection = "movies")
@@ -79,4 +80,17 @@ public class MovieEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieEntity movie = (MovieEntity) o;
+        return Objects.equals(id, movie.id) && Objects.equals(title, movie.title) && Objects.equals(description, movie.description) && rating == movie.rating && Objects.equals(duration, movie.duration) && Objects.equals(watchLink, movie.watchLink) && quality == movie.quality && status == movie.status && Objects.equals(releaseYear, movie.releaseYear) && Objects.equals(languages, movie.languages) && Objects.equals(subtitle, movie.subtitle) && Objects.equals(bannerImgUrl, movie.bannerImgUrl) && Objects.equals(imgUrl, movie.imgUrl) && size == movie.size && Objects.equals(genres, movie.genres) && Objects.equals(categories, movie.categories) && Objects.equals(createdAt, movie.createdAt) && Objects.equals(updatedAt, movie.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, rating, duration, watchLink, quality, status, releaseYear, languages, subtitle, bannerImgUrl, imgUrl, size, genres, categories, createdAt, updatedAt);
+    }
 }
