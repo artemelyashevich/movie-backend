@@ -11,6 +11,9 @@ import com.example.demo.service.CategoryService;
 import com.example.demo.service.GenreService;
 import com.example.demo.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,25 +33,34 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Optional<MovieEntity> findById(String id) {
         return Optional.ofNullable(
-                this.movieRepository.findById(id).orElseThrow(NoSuchElementException::new)
+                this.movieRepository.findById(id).orElseThrow(() ->
+                        new NoSuchElementException("Where no movie with such id: %s".formatted(id))
+                )
+        );
+    }
+
+    @Override
+    public List<MovieEntity> findByStatus(String statusName) {
+        return this.movieRepository.findAllByStatus(
+                Status.valueOf(statusName)
         );
     }
 
     @Override
     public List<MovieEntity> findAll(String categoryName, String genreName, String statusName) {
-        if (!categoryName.isEmpty()) {
-            return this.movieRepository.findAllByCategory(
-                    this.categoryService.findByName(categoryName)
-                            .orElseThrow(NoSuchElementException::new)
+        if (categoryName != null && !categoryName.isEmpty()) {
+            return this.movieRepository.findAllByCategories(
+                    List.of(this.categoryService.findByName(categoryName)
+                            .orElseThrow(NoSuchElementException::new))
             );
         }
-        if (!genreName.isEmpty()) {
-            return this.movieRepository.findAllByGenre(
-                    this.genreService.findByName(genreName)
-                            .orElseThrow(NoSuchElementException::new)
+        if (genreName != null && !genreName.isEmpty()) {
+            return this.movieRepository.findAllByGenres(
+                    List.of(this.genreService.findByName(genreName)
+                            .orElseThrow(NoSuchElementException::new))
             );
         }
-        if (!statusName.isEmpty()) {
+        if (statusName != null && !statusName.isEmpty()) {
             return this.movieRepository.findAllByStatus(
                     Status.valueOf(statusName)
             );
@@ -57,17 +69,28 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public Page<MovieEntity> findPaginated(Integer page, Integer size) {
+        final Pageable pageable = PageRequest.of(page, size);
+        Page<MovieEntity> movies = this.movieRepository.findAll(pageable);
+        return movies;
+    }
+
+    @Override
     public MovieEntity create(MovieDto dto) {
         List<GenreEntity> genres = dto.genres().stream()
                 .map(
                         genre -> genreService.findByName(genre)
-                                .orElseThrow(NoSuchElementException::new)
+                                .orElseThrow(() ->
+                                        new NoSuchElementException("Where no such genre: %s".formatted(genre))
+                                )
                 )
                 .toList();
         List<CategoryEntity> categories = dto.categories().stream()
                 .map(
                         category -> categoryService.findByName(category)
-                                .orElseThrow(NoSuchElementException::new)
+                                .orElseThrow((() ->
+                                        new NoSuchElementException("Where no such category: %s".formatted(category))
+                                ))
                 )
                 .toList();
         MovieEntity movie = dtoMapper.convertFromDto(dto);
@@ -83,13 +106,23 @@ public class MovieServiceImpl implements MovieService {
                     List<GenreEntity> genres = dto.genres().stream()
                             .map(
                                     genre -> genreService.findByName(genre)
-                                            .orElseThrow(NoSuchElementException::new)
+                                            .orElseThrow((() ->
+                                                    new NoSuchElementException(
+                                                            "Where no such genre: %s"
+                                                                    .formatted(genre)
+                                                    )
+                                            ))
                             )
                             .toList();
                     List<CategoryEntity> categories = dto.categories().stream()
                             .map(
                                     category -> categoryService.findByName(category)
-                                            .orElseThrow(NoSuchElementException::new)
+                                            .orElseThrow((() ->
+                                                    new NoSuchElementException(
+                                                            "Where no such category: %s"
+                                                                    .formatted(category)
+                                                    )
+                                            ))
                             )
                             .toList();
                     movie.setCategories(categories);
@@ -110,7 +143,7 @@ public class MovieServiceImpl implements MovieService {
                     this.movieRepository.save(movie);
                 },
                 () -> {
-                    throw new NoSuchElementException("");
+                    throw new NoSuchElementException("Where no movie with such id: %s".formatted(id));
                 }
         );
     }
@@ -120,7 +153,7 @@ public class MovieServiceImpl implements MovieService {
         this.movieRepository.findById(id).ifPresentOrElse(
                 movieRepository::delete,
                 () -> {
-                    throw new NoSuchElementException("");
+                    throw new NoSuchElementException("Where no movie with such id: %s".formatted(id));
                 }
         );
     }
