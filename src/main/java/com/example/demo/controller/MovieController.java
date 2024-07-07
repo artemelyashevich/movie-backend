@@ -28,11 +28,12 @@ public class MovieController {
     public ResponseEntity<List<MovieEntity>> getAll(
             @RequestParam(value = "categoryName", required = false) String categoryName,
             @RequestParam(value = "genreName", required = false) String genreName,
-            @RequestParam(value = "statusName", required = false) String statusName
+            @RequestParam(value = "statusName", required = false) String statusName,
+            @RequestParam(value = "query", required = false) String query
     ) {
         return ResponseEntity
                 .ok()
-                .body(this.movieService.findAll(categoryName, genreName, statusName));
+                .body(this.movieService.findAll(categoryName, genreName, statusName, query));
     }
 
     @GetMapping("paginated")

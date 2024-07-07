@@ -4,9 +4,8 @@ import com.example.demo.entity.CategoryEntity;
 import com.example.demo.entity.GenreEntity;
 import com.example.demo.entity.movie.MovieEntity;
 import com.example.demo.entity.movie.Status;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
@@ -18,5 +17,6 @@ public interface MovieRepository extends MongoRepository<MovieEntity, String> {
 
     List<MovieEntity> findAllByStatus(Status status);
 
- //   Page<MovieEntity> findAllPaginated(Pageable pageable);
+    @Query("{title:{$regex:?0}}")
+    List<MovieEntity> findByTitle(String query);
 }

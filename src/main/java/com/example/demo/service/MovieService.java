@@ -13,7 +13,7 @@ public interface MovieService {
 
     List<MovieEntity> findByStatus(String statusName);
 
-    List<MovieEntity> findAll(String categoryName, String genreName, String statusName);
+    List<MovieEntity> findAll(String categoryName, String genreName, String statusName, String query);
 
     Page<MovieEntity> findPaginated(Integer page, Integer size);
 

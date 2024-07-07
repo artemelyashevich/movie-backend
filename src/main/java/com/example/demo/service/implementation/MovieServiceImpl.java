@@ -47,7 +47,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieEntity> findAll(String categoryName, String genreName, String statusName) {
+    public List<MovieEntity> findAll(String categoryName, String genreName, String statusName, String query) {
+        if (query != null && !query.isEmpty()) {
+            return this.movieRepository.findByTitle(query);
+        }
         if (categoryName != null && !categoryName.isEmpty()) {
             return this.movieRepository.findAllByCategories(
                     List.of(this.categoryService.findByName(categoryName)
