@@ -20,17 +20,20 @@ public class CategoryServiceImpl implements CategoryService {
     private final DtoMapper<CategoryDto, CategoryEntity> dtoMapper;
 
     @Override
-    public Optional<CategoryEntity> findById(String id) {
-        return Optional.ofNullable(this.categoryRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new));
+    public CategoryEntity findById(final String id) {
+        return this.categoryRepository.findById(id)
+                .orElseThrow(() ->
+                        new NoSuchElementException("No such category with id: %s".formatted(id))
+                );
     }
 
     @Override
-    public Optional<CategoryEntity> findByName(String name) {
-        return Optional.ofNullable(
+    public CategoryEntity findByName(final String name) {
+        return
                 this.categoryRepository.findByTitle(name)
-                        .orElseThrow(NoSuchElementException::new)
-        );
+                        .orElseThrow(() ->
+                                new NoSuchElementException("No such category with name: %s".formatted(name))
+                        );
     }
 
     @Override
@@ -39,30 +42,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryEntity create(CategoryDto dto) {
+    public CategoryEntity create(final CategoryDto dto) {
         return this.categoryRepository.save(this.dtoMapper.convertFromDto(dto));
     }
 
     @Override
-    public void update(String id, CategoryDto dto) {
-        this.categoryRepository.findById(id).ifPresentOrElse(
-                category -> {
-                    category.setTitle(dto.title());
-                    this.categoryRepository.save(category);
-                },
-                () -> {
-                    throw new NoSuchElementException();
-                }
-        );
+    public void update(final String id, final CategoryDto dto) {
+        final CategoryEntity category = this.findById(id);
+        category.setTitle(dto.title());
+        category.setDetails(dto.details());
+        this.categoryRepository.save(category);
     }
 
     @Override
-    public void delete(String id) {
-        this.categoryRepository.findById(id).ifPresentOrElse(
-                this.categoryRepository::delete,
-                () -> {
-                    throw new NoSuchElementException();
-                }
-        );
+    public void delete(final String id) {
+        final CategoryEntity category = this.findById(id);
+        this.categoryRepository.delete(category);
     }
 }

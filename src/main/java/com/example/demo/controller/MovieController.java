@@ -10,12 +10,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -26,10 +34,10 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<List<MovieEntity>> getAll(
-            @RequestParam(value = "categoryName", required = false) String categoryName,
-            @RequestParam(value = "genreName", required = false) String genreName,
-            @RequestParam(value = "statusName", required = false) String statusName,
-            @RequestParam(value = "query", required = false) String query
+            final @RequestParam(value = "categoryName", required = false) String categoryName,
+            final @RequestParam(value = "genreName", required = false) String genreName,
+            final @RequestParam(value = "statusName", required = false) String statusName,
+            final @RequestParam(value = "query", required = false) String query
     ) {
         return ResponseEntity
                 .ok()
@@ -38,8 +46,8 @@ public class MovieController {
 
     @GetMapping("paginated")
     public ResponseEntity<Page<MovieEntity>> getPaginated(
-            @RequestParam(value = "page") Integer page,
-            @RequestParam("size") Integer size
+            final @RequestParam(value = "page") Integer page,
+            final @RequestParam("size") Integer size
     ) {
         return ResponseEntity
                 .ok()
@@ -47,31 +55,35 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<MovieEntity> create(@Valid @RequestBody MovieDto dto,
-                                              BindingResult bindingResult,
-                                              UriComponentsBuilder uriComponentsBuilder) throws BindException {
+    public ResponseEntity<MovieEntity> create(
+            final @Valid @RequestBody MovieDto dto,
+            final BindingResult bindingResult,
+            final UriComponentsBuilder uriComponentsBuilder
+    ) throws BindException {
         Utils.validateBindingResult(bindingResult);
         final MovieEntity movie = this.movieService.create(dto);
         return ResponseEntity
                 .created(
                         uriComponentsBuilder
-                                .replacePath("movies/{movieId}")
+                                .replacePath("/api/v1/movies/{movieId}")
                                 .build(Map.of("movieId", movie.getId()))
                 )
                 .body(movie);
     }
 
     @GetMapping("{movieId}")
-    public ResponseEntity<MovieEntity> getById(@PathVariable("movieId") String movieId) {
+    public ResponseEntity<MovieEntity> getById(final @PathVariable("movieId") String movieId) {
         return ResponseEntity
                 .ok()
-                .body(this.movieService.findById(movieId).orElseThrow(NoSuchElementException::new));
+                .body(this.movieService.findById(movieId));
     }
 
     @PatchMapping("{movieId}")
-    public ResponseEntity<Void> update(@PathVariable("movieId") String movieId,
-                                       @Valid @RequestBody MovieDto dto,
-                                       BindingResult bindingResult) throws BindException {
+    public ResponseEntity<Void> update(
+            final @PathVariable("movieId") String movieId,
+            final @Valid @RequestBody MovieDto dto,
+            final BindingResult bindingResult
+    ) throws BindException {
         Utils.validateBindingResult(bindingResult);
         this.movieService.update(movieId, dto);
         return ResponseEntity
@@ -80,7 +92,7 @@ public class MovieController {
     }
 
     @DeleteMapping("{movieId}")
-    public ResponseEntity<Void> delete(@PathVariable("movieId") String movieId) {
+    public ResponseEntity<Void> delete(final @PathVariable("movieId") String movieId) {
         this.movieService.delete(movieId);
         return ResponseEntity
                 .noContent()
@@ -89,7 +101,7 @@ public class MovieController {
 
     @GetMapping("/status/{statusName}")
     public ResponseEntity<List<MovieEntity>> findAllByStatus(
-            @PathVariable("statusName") String status
+            final @PathVariable("statusName") String status
     ) {
         return ResponseEntity
                 .ok()

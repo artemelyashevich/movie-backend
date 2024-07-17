@@ -17,4 +17,9 @@ public class UserMapper implements DtoMapper<SignUpDto, UserEntity> {
                 .email(dto.email())
                 .build();
     }
+
+    @Override
+    public UserEntity update(UserEntity entity, SignUpDto dto) {
+        return null;
+    }
 }

@@ -25,25 +25,29 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Optional<GenreEntity> findById(String id) {
-        return Optional.ofNullable(this.genreRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new));
+    public GenreEntity findById(final String id) {
+        return this.genreRepository.findById(id)
+                .orElseThrow(() ->
+                        new NoSuchElementException("No such genre with id: %s".formatted(id))
+                );
+
     }
 
     @Override
-    public Optional<GenreEntity> findByName(String name) {
-        return Optional.ofNullable(
-                this.genreRepository.findByTitle(name).orElseThrow(NoSuchElementException::new)
-        );
+    public GenreEntity findByName(final String name) {
+        return
+                this.genreRepository.findByTitle(name).orElseThrow(() ->
+                        new NoSuchElementException("No such genre with name: %s".formatted(name))
+                );
     }
 
     @Override
-    public GenreEntity create(GenreDto dto) {
+    public GenreEntity create(final GenreDto dto) {
         return this.genreRepository.save(this.genreMapper.convertFromDto(dto));
     }
 
     @Override
-    public void update(String id, GenreDto dto) {
+    public void update(final String id, final GenreDto dto) {
         this.genreRepository.findById(id)
                 .ifPresentOrElse(
                         genre -> {
@@ -51,18 +55,18 @@ public class GenreServiceImpl implements GenreService {
                             genreRepository.save(genre);
                         },
                         () -> {
-                            throw new NoSuchElementException();
+                            throw new NoSuchElementException("No such genre with id: %s".formatted(id));
                         }
                 );
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(final String id) {
         this.genreRepository.findById(id)
                 .ifPresentOrElse(
                         genreRepository::delete,
                         () -> {
-                            throw new NoSuchElementException();
+                            throw new NoSuchElementException("No such genre with id: %s".formatted(id));
                         }
                 );
     }

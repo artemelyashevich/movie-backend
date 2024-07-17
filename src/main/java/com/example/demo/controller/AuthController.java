@@ -10,18 +10,18 @@ import com.example.demo.util.Utils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -34,17 +34,16 @@ public class AuthController {
 
     @PostMapping("sign-in")
     public ResponseEntity<AuthResponseDto> signIn(
-            @Valid @RequestBody SignInDto dto,
-            BindingResult bindingResult,
-            UriComponentsBuilder uriComponentsBuilder
+            final @Valid @RequestBody SignInDto dto,
+            final BindingResult bindingResult,
+            final UriComponentsBuilder uriComponentsBuilder
     ) throws BindException {
         Utils.validateBindingResult(bindingResult);
-        final UserEntity user = this.userService.findByUsername(dto.username())
-                .orElseThrow(NoSuchElementException::new);
+        final UserEntity user = this.userService.findByUsername(dto.username());
         return ResponseEntity
                 .created(
                         uriComponentsBuilder
-                                .replacePath("users/{userId}")
+                                .replacePath("/api/v1/users/{userId}")
                                 .build(
                                         Map.of("userId", user.getId())
                                 )
@@ -56,10 +55,10 @@ public class AuthController {
 
     @PostMapping("sign-up")
     public ResponseEntity<AuthResponseDto> signUp(
-            @Valid @RequestBody SignUpDto dto,
-            BindingResult bindingResult,
-            UriComponentsBuilder uriComponentsBuilder,
-            HttpServletResponse response
+            final @Valid @RequestBody SignUpDto dto,
+            final BindingResult bindingResult,
+            final UriComponentsBuilder uriComponentsBuilder,
+            final HttpServletResponse response
     ) throws BindException {
         Utils.validateBindingResult(bindingResult);
         final UserEntity user = this.userService.create(dto);
@@ -72,7 +71,7 @@ public class AuthController {
         return ResponseEntity
                 .created(
                         uriComponentsBuilder
-                                .replacePath("users/{userId}")
+                                .replacePath("/api/v1/users/{userId}")
                                 .build(
                                         Map.of("userId", user.getId())
                                 )

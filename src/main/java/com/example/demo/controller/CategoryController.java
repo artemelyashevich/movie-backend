@@ -10,12 +10,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("categories")
@@ -33,36 +40,40 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody CategoryDto dto,
-                                    BindingResult bindingResult,
-                                    UriComponentsBuilder uriComponentsBuilder) throws BindException {
+    public ResponseEntity<?> create(
+            final @Valid @RequestBody CategoryDto dto,
+            final BindingResult bindingResult,
+            final UriComponentsBuilder uriComponentsBuilder
+    ) throws BindException {
         Utils.validateBindingResult(bindingResult);
         final CategoryEntity category = this.categoryService.create(dto);
         return ResponseEntity
                 .created(
-                        uriComponentsBuilder.replacePath("/category/{categoryId}")
+                        uriComponentsBuilder.replacePath("/api/v1/category/{categoryId}")
                                 .build(Map.of("categoryId", category.getId())))
                 .body(category);
     }
 
     @GetMapping("{categoryId}")
-    public ResponseEntity<CategoryEntity> getById(@PathVariable String categoryId) {
+    public ResponseEntity<CategoryEntity> getById(final @PathVariable String categoryId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.categoryService.findById(categoryId).orElseThrow(NoSuchElementException::new));
+                .body(this.categoryService.findById(categoryId));
     }
 
     @PatchMapping("{categoryId}")
-    public ResponseEntity<Void> update(@PathVariable String categoryId,
-                                    @Valid @RequestBody CategoryDto dto,
-                                    BindingResult bindingResult) throws BindException {
+    public ResponseEntity<Void> update(
+            final @PathVariable String categoryId,
+            final @Valid @RequestBody CategoryDto dto,
+            final BindingResult bindingResult
+    ) throws BindException {
         Utils.validateBindingResult(bindingResult);
         this.categoryService.update(categoryId, dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{categoryId}")
-    public ResponseEntity<Void> delete(@PathVariable String categoryId) {
+    public ResponseEntity<Void> delete(final @PathVariable String categoryId) {
         this.categoryService.delete(categoryId);
         return ResponseEntity.noContent().build();
     }

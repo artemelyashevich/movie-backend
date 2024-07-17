@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 
 @Service
@@ -31,133 +30,88 @@ public class MovieServiceImpl implements MovieService {
     private final GenreService genreService;
 
     @Override
-    public Optional<MovieEntity> findById(String id) {
-        return Optional.ofNullable(
-                this.movieRepository.findById(id).orElseThrow(() ->
-                        new NoSuchElementException("Where no movie with such id: %s".formatted(id))
-                )
+    public MovieEntity findById(final String id) {
+        return this.movieRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Where no movie with such id: %s".formatted(id))
         );
     }
 
     @Override
-    public List<MovieEntity> findByStatus(String statusName) {
+    public List<MovieEntity> findByStatus(final String statusName) {
         return this.movieRepository.findAllByStatus(
                 Status.valueOf(statusName)
         );
     }
 
     @Override
-    public List<MovieEntity> findAll(String categoryName, String genreName, String statusName, String query) {
+    public List<MovieEntity> findAll(String categoryName, String genreName, String statusName, final String query) {
         if (query != null && !query.isEmpty()) {
-            return this.movieRepository.findByTitle(query);
+            return this.findByTitle(query);
         }
         if (categoryName != null && !categoryName.isEmpty()) {
-            return this.movieRepository.findAllByCategories(
-                    List.of(this.categoryService.findByName(categoryName)
-                            .orElseThrow(NoSuchElementException::new))
-            );
+            return this.findByCategory(categoryName);
         }
         if (genreName != null && !genreName.isEmpty()) {
-            return this.movieRepository.findAllByGenres(
-                    List.of(this.genreService.findByName(genreName)
-                            .orElseThrow(NoSuchElementException::new))
-            );
+            return this.findByGenre(genreName);
         }
         if (statusName != null && !statusName.isEmpty()) {
-            return this.movieRepository.findAllByStatus(
-                    Status.valueOf(statusName)
-            );
+            return this.findByStatus(statusName);
         }
         return this.movieRepository.findAll();
     }
 
     @Override
-    public Page<MovieEntity> findPaginated(Integer page, Integer size) {
+    public Page<MovieEntity> findPaginated(final Integer page, final Integer size) {
         final Pageable pageable = PageRequest.of(page, size);
-        Page<MovieEntity> movies = this.movieRepository.findAll(pageable);
-        return movies;
+        return this.movieRepository.findAll(pageable);
     }
 
     @Override
-    public MovieEntity create(MovieDto dto) {
-        List<GenreEntity> genres = dto.genres().stream()
-                .map(
-                        genre -> genreService.findByName(genre)
-                                .orElseThrow(() ->
-                                        new NoSuchElementException("Where no such genre: %s".formatted(genre))
-                                )
-                )
-                .toList();
-        List<CategoryEntity> categories = dto.categories().stream()
-                .map(
-                        category -> categoryService.findByName(category)
-                                .orElseThrow((() ->
-                                        new NoSuchElementException("Where no such category: %s".formatted(category))
-                                ))
-                )
-                .toList();
-        MovieEntity movie = dtoMapper.convertFromDto(dto);
-        movie.setGenres(genres);
-        movie.setCategories(categories);
+    public MovieEntity create(final MovieDto dto) {
+        final MovieEntity movie = dtoMapper.convertFromDto(dto);
+        movie.setGenres(
+                dto.genres().stream()
+                        .map(genreService::findByName)
+                        .toList()
+        );
+        movie.setCategories(
+                dto.categories().stream()
+                        .map(this.categoryService::findByName)
+                        .toList()
+        );
         return movieRepository.save(movie);
     }
 
     @Override
-    public void update(String id, MovieDto dto) {
-        this.movieRepository.findById(id).ifPresentOrElse(
-                movie -> {
-                    List<GenreEntity> genres = dto.genres().stream()
-                            .map(
-                                    genre -> genreService.findByName(genre)
-                                            .orElseThrow((() ->
-                                                    new NoSuchElementException(
-                                                            "Where no such genre: %s"
-                                                                    .formatted(genre)
-                                                    )
-                                            ))
-                            )
-                            .toList();
-                    List<CategoryEntity> categories = dto.categories().stream()
-                            .map(
-                                    category -> categoryService.findByName(category)
-                                            .orElseThrow((() ->
-                                                    new NoSuchElementException(
-                                                            "Where no such category: %s"
-                                                                    .formatted(category)
-                                                    )
-                                            ))
-                            )
-                            .toList();
-                    movie.setCategories(categories);
-                    movie.setGenres(genres);
-                    movie.setDuration(dto.duration());
-                    movie.setDescription(dto.description());
-                    movie.setRating(dto.rating());
-                    movie.setQuality(dto.quality());
-                    movie.setStatus(dto.status());
-                    movie.setBannerImgUrl(dto.bannerImgUrl());
-                    movie.setImgUrl(dto.imgUrl());
-                    movie.setSize(dto.size());
-                    movie.setSubtitle(dto.subtitle());
-                    movie.setTitle(dto.title());
-                    movie.setLanguages(dto.languages());
-                    movie.setReleaseYear(dto.releaseYear());
-                    movie.setWatchLink(dto.watchLink());
-                    this.movieRepository.save(movie);
-                },
-                () -> {
-                    throw new NoSuchElementException("Where no movie with such id: %s".formatted(id));
-                }
-        );
+    public void update(final String id, final MovieDto dto) {
+        MovieEntity movie = this.findById(id);
+        List<GenreEntity> genres = dto.genres().stream()
+                .map(this.genreService::findByName)
+                .toList();
+        List<CategoryEntity> categories = dto.categories().stream()
+                .map(this.categoryService::findByName)
+                .toList();
+        movie = this.dtoMapper.update(movie, dto);
+        movie.setCategories(categories);
+        movie.setGenres(genres);
+        this.movieRepository.save(movie);
     }
 
     @Override
-    public void delete(String id) {
-        this.movieRepository.findById(id).ifPresentOrElse(
-                movieRepository::delete,
-                () -> {
-                    throw new NoSuchElementException("Where no movie with such id: %s".formatted(id));
-                }
-        );
+    public void delete(final String id) {
+        final MovieEntity movie = this.findById(id);
+        this.movieRepository.delete(movie);
+    }
+
+    private List<MovieEntity> findByTitle(final String query) {
+        return this.movieRepository.findByTitle(query);
+    }
+
+    private List<MovieEntity> findByGenre(final String genre) {
+        return this.movieRepository.findAllByGenres(List.of(this.genreService.findByName(genre)));
+    }
+
+    private List<MovieEntity> findByCategory(final String category) {
+        return this.movieRepository.findAllByCategories(List.of(this.categoryService.findByName(category)));
     }
 }

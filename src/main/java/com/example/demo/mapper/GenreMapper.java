@@ -17,4 +17,9 @@ public class GenreMapper implements DtoMapper<GenreDto, GenreEntity> {
                 .details(dto.details())
                 .build();
     }
+
+    @Override
+    public GenreEntity update(GenreEntity entity, GenreDto dto) {
+        return null;
+    }
 }

@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Optional<UserEntity> findByUsername(String username);
+    UserEntity findByUsername(String username);
 
     List<UserEntity> findAll();
 
-    Optional<UserEntity> findById(String id);
+    UserEntity findById(String id);
 
     UserEntity create(SignUpDto dto);
 

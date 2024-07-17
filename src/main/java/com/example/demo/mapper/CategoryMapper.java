@@ -17,4 +17,9 @@ public class CategoryMapper implements DtoMapper<CategoryDto, CategoryEntity> {
                 .details(dto.details())
                 .build();
     }
+
+    @Override
+    public CategoryEntity update(CategoryEntity entity, CategoryDto dto) {
+        return null;
+    }
 }

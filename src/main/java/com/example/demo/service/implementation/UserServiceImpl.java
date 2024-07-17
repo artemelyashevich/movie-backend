@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +22,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
-        return Optional.ofNullable(this.userRepository.findByUsername(username)
-                .orElseThrow(NoSuchElementException::new));
+    public UserEntity findByUsername(final String username) {
+        return this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("No such user with username: %s".formatted(username)));
     }
 
     @Override
@@ -34,13 +33,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> findById(String id) {
-        return Optional.ofNullable(this.userRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new));
+    public UserEntity findById(final String id) {
+        return this.userRepository.findById(id)
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
-    public UserEntity create(SignUpDto dto) {
+    public UserEntity create(final SignUpDto dto) {
         UserEntity user = this.dtoMapper.convertFromDto(dto);
         user.setPassword(this.passwordEncoder.encode(dto.password()));
         user.setRoles(
@@ -50,20 +49,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(String userId, SignUpDto dto) {
-        final UserEntity user = this.findById(userId).orElseThrow(
-                NoSuchElementException::new
-        );
+    public void update(final String userId, final SignUpDto dto) {
+        final UserEntity user = this.findById(userId);
         user.setEmail(dto.email());
         user.setUsername(dto.username());
         this.userRepository.save(user);
     }
 
     @Override
-    public void delete(String username, String password) {
-        final UserEntity user = this.findByUsername(username).orElseThrow(
-                NoSuchElementException::new
-        );
+    public void delete(final String username, final String password) {
+        final UserEntity user = this.findByUsername(username);
         this.userRepository.delete(user);
     }
 }

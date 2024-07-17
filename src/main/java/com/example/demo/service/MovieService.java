@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface MovieService {
 
-    Optional<MovieEntity> findById(String id);
+    MovieEntity findById(String id);
 
     List<MovieEntity> findByStatus(String statusName);
 

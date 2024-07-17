@@ -1,0 +1,26 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1/
+
+application:
+  security:
+    jwt:
+      secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
+      lifetime: 86400000
+  uploads:
+    folder-path: C:/Users/37529/IdeaProjects/movie-backend/demo/uploads/
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      authentication-database: admin
+      database: DB_NAME
+      auto-index-creation: true
+  application:
+    name: demo
+

@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    Optional<CategoryEntity> findById(String id);
+    CategoryEntity findById(String id);
 
-    Optional<CategoryEntity> findByName(String name);
+    CategoryEntity findByName(String name);
 
     List<CategoryEntity> findAll();
 

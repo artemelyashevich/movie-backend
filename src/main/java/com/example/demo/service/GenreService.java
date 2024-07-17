@@ -10,9 +10,9 @@ public interface GenreService {
 
     List<GenreEntity> findAll();
 
-    Optional<GenreEntity> findById(String id);
+    GenreEntity findById(String id);
 
-    Optional<GenreEntity> findByName(String name);
+    GenreEntity findByName(String name);
 
     GenreEntity create(GenreDto genreCreateDto);
 

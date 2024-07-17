@@ -23,9 +23,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final UserEntity user = this.userService.findByUsername(username)
-                .orElseThrow(NoSuchElementException::new);
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        final UserEntity user = this.userService.findByUsername(username);
         Collection<GrantedAuthority> roles = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList());
         return new User(user.getUsername(), user.getPassword(),roles);

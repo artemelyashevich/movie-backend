@@ -3,6 +3,7 @@ package com.example.demo.util;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.experimental.UtilityClass;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,11 +13,13 @@ import java.util.Map;
 @UtilityClass
 public class Token {
 
-    private final String secret = "984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf";
+    @Value("${application.security.jwt.secret}")
+    private String secret;
 
-    private final long jwtLifeTime = 86400000;
+    @Value("${application.security.jwt.lifetime}")
+    private long jwtLifeTime;
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(final UserDetails userDetails) {
         Date issuedAt = new Date();
         return Jwts.builder()
                 .setClaims(

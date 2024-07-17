@@ -28,4 +28,22 @@ public class MovieMapper implements DtoMapper<MovieDto, MovieEntity> {
                 .releaseYear(dto.releaseYear())
                 .build();
     }
+
+    @Override
+    public MovieEntity update(MovieEntity movie, MovieDto dto) {
+        movie.setDuration(dto.duration());
+        movie.setDescription(dto.description());
+        movie.setRating(dto.rating());
+        movie.setQuality(dto.quality());
+        movie.setStatus(dto.status());
+        movie.setBannerImgUrl(dto.bannerImgUrl());
+        movie.setImgUrl(dto.imgUrl());
+        movie.setSize(dto.size());
+        movie.setSubtitle(dto.subtitle());
+        movie.setTitle(dto.title());
+        movie.setLanguages(dto.languages());
+        movie.setReleaseYear(dto.releaseYear());
+        movie.setWatchLink(dto.watchLink());
+        return movie;
+    }
 }

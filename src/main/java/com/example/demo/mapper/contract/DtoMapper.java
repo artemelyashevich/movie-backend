@@ -4,4 +4,6 @@ import lombok.NonNull;
 public interface DtoMapper<T, R> {
     @NonNull
     R convertFromDto(T dto);
+
+    R update(R entity, T dto);
 }

@@ -9,10 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -30,9 +33,9 @@ public class UserController {
 
     @PatchMapping("{userId}")
     public ResponseEntity<Void> update(
-            @PathVariable("userId") String userId,
-            @Valid SignUpDto dto,
-            BindingResult bindingResult
+            final @PathVariable("userId") String userId,
+            final @Valid SignUpDto dto,
+            final BindingResult bindingResult
     ) throws BindException {
         Utils.validateBindingResult(bindingResult);
         this.userService.update(userId, dto);
@@ -42,11 +45,9 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<UserEntity> getById(@PathVariable("userId") String id) {
+    public ResponseEntity<UserEntity> getById(final @PathVariable("userId") String id) {
         return ResponseEntity
                 .ok()
-                .body(this.userService.findById(id).orElseThrow(
-                        NoSuchElementException::new
-                ));
+                .body(this.userService.findById(id));
     }
 }

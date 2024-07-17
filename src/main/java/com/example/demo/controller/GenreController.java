@@ -10,12 +10,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -33,36 +40,40 @@ public class GenreController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody GenreDto dto,
-                                    BindingResult bindingResult,
-                                    UriComponentsBuilder uriComponentsBuilder) throws BindException {
+    public ResponseEntity<?> create(
+            final @Valid @RequestBody GenreDto dto,
+            final BindingResult bindingResult,
+            final UriComponentsBuilder uriComponentsBuilder
+    ) throws BindException {
         Utils.validateBindingResult(bindingResult);
         final GenreEntity genre = this.genreService.create(dto);
         return ResponseEntity
                 .created(
-                        uriComponentsBuilder.replacePath("/genre/{genreId}")
+                        uriComponentsBuilder.replacePath("/api/v1/genre/{genreId}")
                                 .build(Map.of("genreId", genre.getId())))
                 .body(genre);
     }
 
     @GetMapping("{genreId}")
-    public ResponseEntity<GenreEntity> getById(@PathVariable String genreId) {
-        return  ResponseEntity
+    public ResponseEntity<GenreEntity> getById(final @PathVariable String genreId) {
+        return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(this.genreService.findById(genreId).orElseThrow(NoSuchElementException::new));
+                .body(this.genreService.findById(genreId));
     }
 
     @PatchMapping("{genreId}")
-    public ResponseEntity<Void> update(@PathVariable String genreId,
-                                       @Valid @RequestBody GenreDto dto,
-                                       BindingResult bindingResult) throws BindException {
+    public ResponseEntity<Void> update(
+            final @PathVariable String genreId,
+            final @Valid @RequestBody GenreDto dto,
+            final BindingResult bindingResult
+    ) throws BindException {
         Utils.validateBindingResult(bindingResult);
         this.genreService.update(genreId, dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{genreId}")
-    public ResponseEntity<Void> delete(@PathVariable String genreId) {
+    public ResponseEntity<Void> delete(final @PathVariable String genreId) {
         this.genreService.delete(genreId);
         return ResponseEntity.noContent().build();
     }

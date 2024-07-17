@@ -17,11 +17,10 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsServiceImpl userService;
-    private final UserService customUserService;
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthResponseDto signIn(SignInDto dto) {
+    public AuthResponseDto signIn(final SignInDto dto) {
         this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.username(), dto.password())
         );
@@ -33,9 +32,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDto signUp(SignUpDto dto) {
+    public AuthResponseDto signUp(final SignUpDto dto) {
         return new AuthResponseDto(
-                Token.generateToken(userService.loadUserByUsername(dto.username())
+                Token.generateToken(this.userService.loadUserByUsername(dto.username())
                 )
         );
     }
