@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.entity.contract.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,10 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryEntity {
-
-    @Id
-    private String id;
+public class CategoryEntity extends AbstractEntity {
 
     @Indexed(unique = true)
     private String title;
@@ -32,11 +30,11 @@ public class CategoryEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CategoryEntity category = (CategoryEntity) o;
-        return Objects.equals(id, category.id) && Objects.equals(title, category.title) && Objects.equals(details, category.details);
+        return Objects.equals(getId(), category.getId()) && Objects.equals(title, category.title) && Objects.equals(details, category.details);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, details);
+        return Objects.hash(getId(), title, details);
     }
 }

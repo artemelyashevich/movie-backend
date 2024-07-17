@@ -1,5 +1,6 @@
 package com.example.demo.entity.user;
 
+import com.example.demo.entity.contract.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,10 +22,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserEntity {
-
-    @Id
-    private String id;
+public class UserEntity extends AbstractEntity {
 
     @Indexed(unique = true)
     private String username;
@@ -34,16 +32,6 @@ public class UserEntity {
 
     private String password;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
     private List<Role> roles;
 
     @Override
@@ -51,11 +39,11 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(roles, that.roles);
+        return Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(roles, that.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, createdAt, updatedAt, roles);
+        return Objects.hash(username, email, password, roles);
     }
 }

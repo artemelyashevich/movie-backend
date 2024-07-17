@@ -3,7 +3,7 @@ package com.example.demo.service.implementation;
 import com.example.demo.dto.auth.SignUpDto;
 import com.example.demo.entity.user.Role;
 import com.example.demo.entity.user.UserEntity;
-import com.example.demo.mapper.DtoMapper;
+import com.example.demo.mapper.contract.DtoMapper;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;

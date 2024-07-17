@@ -5,7 +5,7 @@ import com.example.demo.entity.CategoryEntity;
 import com.example.demo.entity.GenreEntity;
 import com.example.demo.entity.movie.MovieEntity;
 import com.example.demo.entity.movie.Status;
-import com.example.demo.mapper.DtoMapper;
+import com.example.demo.mapper.contract.DtoMapper;
 import com.example.demo.repository.MovieRepository;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.GenreService;

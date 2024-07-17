@@ -2,6 +2,7 @@ package com.example.demo.mapper;
 
 import com.example.demo.dto.auth.SignUpDto;
 import com.example.demo.entity.user.UserEntity;
+import com.example.demo.mapper.contract.DtoMapper;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 

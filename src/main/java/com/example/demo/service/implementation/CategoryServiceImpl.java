@@ -2,7 +2,7 @@ package com.example.demo.service.implementation;
 
 import com.example.demo.dto.CategoryDto;
 import com.example.demo.entity.CategoryEntity;
-import com.example.demo.mapper.DtoMapper;
+import com.example.demo.mapper.contract.DtoMapper;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
 import lombok.RequiredArgsConstructor;

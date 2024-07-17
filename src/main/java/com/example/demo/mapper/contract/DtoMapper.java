@@ -1,4 +1,4 @@
-package com.example.demo.mapper;
+package com.example.demo.mapper.contract;
 import lombok.NonNull;
 
 public interface DtoMapper<T, R> {
