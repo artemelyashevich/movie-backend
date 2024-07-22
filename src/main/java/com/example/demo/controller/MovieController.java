@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +69,38 @@ public class MovieController {
                         uriComponentsBuilder
                                 .replacePath("/api/v1/movies/{movieId}")
                                 .build(Map.of("movieId", movie.getId()))
+                )
+                .body(movie);
+    }
+
+    @PostMapping("{movieId}")
+    public ResponseEntity<MovieEntity> uploadImage(
+            final @PathVariable("movieId") String id,
+            final @RequestParam MultipartFile file,
+            final UriComponentsBuilder uriComponentsBuilder
+    ) throws IOException {
+        final MovieEntity movie = this.movieService.uploadImage(file, id);
+        return ResponseEntity
+                .created(
+                        uriComponentsBuilder
+                                .replacePath("/api/v1/movie/{movieId}")
+                                .build(Map.of("movieId", id))
+                )
+                .body(movie);
+    }
+
+    @PostMapping("{movieId}/bannerImg")
+    public ResponseEntity<MovieEntity> uploadBannerImage(
+            final @PathVariable("movieId") String id,
+            final @RequestParam MultipartFile file,
+            final UriComponentsBuilder uriComponentsBuilder
+    ) throws IOException {
+        final MovieEntity movie = this.movieService.uploadBannerImage(file, id);
+        return ResponseEntity
+                .created(
+                        uriComponentsBuilder
+                                .replacePath("/api/v1/movie/{movieId}")
+                                .build(Map.of("movieId", id))
                 )
                 .body(movie);
     }

@@ -9,13 +9,16 @@ import com.example.demo.mapper.contract.DtoMapper;
 import com.example.demo.repository.MovieRepository;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.GenreService;
+import com.example.demo.service.ImageService;
 import com.example.demo.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -28,12 +31,27 @@ public class MovieServiceImpl implements MovieService {
     private final DtoMapper<MovieDto, MovieEntity> dtoMapper;
     private final CategoryService categoryService;
     private final GenreService genreService;
+    private final ImageService imageService;
 
     @Override
     public MovieEntity findById(final String id) {
         return this.movieRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Where no movie with such id: %s".formatted(id))
         );
+    }
+
+    @Override
+    public MovieEntity uploadImage(final MultipartFile file, final String id) throws IOException {
+        final MovieEntity movie = this.findById(id);
+        movie.setImgUrl(this.imageService.upload(file));
+        return this.movieRepository.save(movie);
+    }
+
+    @Override
+    public MovieEntity uploadBannerImage(final MultipartFile file, final String id) throws IOException {
+        final MovieEntity movie = this.findById(id);
+        movie.setBannerImgUrl(this.imageService.upload(file));
+        return this.movieRepository.save(movie);
     }
 
     @Override
